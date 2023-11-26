@@ -1,8 +1,7 @@
 package bridge.model;
 
 import java.util.List;
-import java.util.stream.Stream;
-import bridge.BridgeNumberGenerator;
+import bridge.BridgeMaker;
 
 /**
  * 다리 건너기 게임을 관리하는 클래스
@@ -10,24 +9,23 @@ import bridge.BridgeNumberGenerator;
 public class BridgeGame {
     private final Bridge bridge;
     private TryCount tryCount;
+    private boolean isFinished;
 
-    private BridgeGame(Bridge bridge, TryCount tryCount) {
+    private BridgeGame(Bridge bridge, TryCount tryCount, boolean isFinished) {
         this.bridge = bridge;
         this.tryCount = tryCount;
+        this.isFinished = isFinished;
     }
 
-    public static BridgeGame create(BridgeNumberGenerator numberGenerator, BridgeSize bridgeSize) {
-        List<BridgeElement> bridgeElements = Stream.generate(() -> createBridgeElement(numberGenerator))
-                .limit(bridgeSize.getSize())
+    public static BridgeGame create(BridgeMaker bridgeMaker, BridgeSize bridgeSize) {
+        List<String> bridgeElementSymbols = bridgeMaker.makeBridge(bridgeSize.getSize());
+        List<BridgeElement> bridgeElements = bridgeElementSymbols.stream()
+                .map(BridgeElement::from)
                 .toList();
         Bridge bridge = Bridge.from(bridgeElements);
         TryCount firstTryCount = TryCount.firstTry();
 
-        return new BridgeGame(bridge, firstTryCount);
-    }
-
-    private static BridgeElement createBridgeElement(BridgeNumberGenerator numberGenerator) {
-        return BridgeElement.from(numberGenerator.generate());
+        return new BridgeGame(bridge, firstTryCount, false);
     }
 
     public void increaseTryCount() {
@@ -43,10 +41,11 @@ public class BridgeGame {
      * <p>
      * 이동을 위해 필요한 메서드의 반환 타입(return type), 인자(parameter)는 자유롭게 추가하거나 변경할 수 있다.
      */
-    public MoveHistory move(MovingCommand movingCommand) {
+    public MovedHistory move(MovingCommand movingCommand) {
         boolean movable = bridge.isMovable(movingCommand);
+        isFinished = bridge.isFinished();
 
-        return MoveHistory.of(movingCommand, movable);
+        return MovedHistory.of(movingCommand, movable);
     }
 
     /**
@@ -57,8 +56,12 @@ public class BridgeGame {
     public void retry() {
     }
 
-    public boolean isFinished() {
-        return bridge.isFinished();
+    public void endGame() {
+        isFinished = true;
+    }
+
+    public boolean isInProgress() {
+        return !isFinished;
     }
 
     public TryCount getTryCount() {

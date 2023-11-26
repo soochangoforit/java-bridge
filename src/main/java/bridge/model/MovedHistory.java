@@ -5,7 +5,7 @@ import static bridge.model.MovingCommand.UP_MOVING;
 
 import java.util.stream.Stream;
 
-public enum MoveHistory {
+public enum MovedHistory {
     UP_TRUE(UP_MOVING, true),
     UP_FALSE(UP_MOVING, false),
     DOWN_TRUE(DOWN_MOVING, true),
@@ -14,12 +14,12 @@ public enum MoveHistory {
     private final MovingCommand movingCommand;
     private final boolean movable;
 
-    MoveHistory(MovingCommand movingCommand, boolean movable) {
+    MovedHistory(MovingCommand movingCommand, boolean movable) {
         this.movingCommand = movingCommand;
         this.movable = movable;
     }
 
-    public static MoveHistory of(MovingCommand movingCommand, boolean movable) {
+    public static MovedHistory of(MovingCommand movingCommand, boolean movable) {
         return Stream.of(values())
                 .filter(moveHistory -> moveHistory.movingCommand == movingCommand && moveHistory.movable == movable)
                 .findFirst()
@@ -30,7 +30,7 @@ public enum MoveHistory {
         return movable;
     }
 
-    public boolean isNotMovable() {
+    public boolean isNotMoved() {
         return !movable;
     }
 

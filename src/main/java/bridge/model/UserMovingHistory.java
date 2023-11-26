@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserMovingHistory {
-    private final List<MoveHistory> moveHistories;
+    private final List<MovedHistory> moveHistories;
 
-    private UserMovingHistory(List<MoveHistory> moveHistories) {
+    private UserMovingHistory(List<MovedHistory> moveHistories) {
         this.moveHistories = new ArrayList<>(moveHistories);
     }
 
@@ -14,15 +14,15 @@ public class UserMovingHistory {
         return new UserMovingHistory(new ArrayList<>());
     }
 
-    public void add(MoveHistory userMoveHistory) {
-        moveHistories.add(userMoveHistory);
+    public void add(MovedHistory userMovedHistory) {
+        moveHistories.add(userMovedHistory);
     }
 
     public void clearHistory() {
         moveHistories.clear();
     }
 
-    public List<MoveHistory> getMoveHistories() {
+    public List<MovedHistory> getMoveHistories() {
         return new ArrayList<>(moveHistories);
     }
 }

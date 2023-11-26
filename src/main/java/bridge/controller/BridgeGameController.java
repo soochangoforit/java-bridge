@@ -1,10 +1,10 @@
 package bridge.controller;
 
 import java.util.function.Supplier;
-import bridge.BridgeNumberGenerator;
+import bridge.BridgeMaker;
 import bridge.model.BridgeGame;
 import bridge.model.BridgeSize;
-import bridge.model.MoveHistory;
+import bridge.model.MovedHistory;
 import bridge.model.MovingCommand;
 import bridge.model.RetryCommand;
 import bridge.model.UserMovingHistory;
@@ -14,57 +14,72 @@ import bridge.view.OutputView;
 public class BridgeGameController {
     private final InputView inputView;
     private final OutputView outputView;
-    private final BridgeNumberGenerator bridgeNumberGenerator;
+    private final BridgeMaker bridgeMaker;
     private final UserMovingHistory userMovingHistory;
 
-    public BridgeGameController(InputView inputView, OutputView outputView,
-                                BridgeNumberGenerator bridgeNumberGenerator, UserMovingHistory userMovingHistory) {
+    public BridgeGameController(InputView inputView, OutputView outputView, BridgeMaker bridgeMaker,
+                                UserMovingHistory userMovingHistory) {
         this.inputView = inputView;
         this.outputView = outputView;
-        this.bridgeNumberGenerator = bridgeNumberGenerator;
+        this.bridgeMaker = bridgeMaker;
         this.userMovingHistory = userMovingHistory;
     }
 
     public void run() {
-        outputView.printStartMessage();
-        BridgeSize bridgeSize = retryOnException(this::fetchBridgeSize);
-        BridgeGame bridgeGame = BridgeGame.create(bridgeNumberGenerator, bridgeSize);
-
-        while (true) {
-            MovingCommand movingCommand = retryOnException(this::fetchMovingCommand);
-
-            MoveHistory userMoveHistory = bridgeGame.move(movingCommand);
-            userMovingHistory.add(userMoveHistory);
-            outputView.printMap(userMovingHistory.getMoveHistories());
-
-            // 마지막까지 움직인 경우
-            if (bridgeGame.isFinished()) {
-                outputView.printResult(userMovingHistory.getMoveHistories(), bridgeGame.getTryCount().getValue());
-                break;
-            }
-
-            // 움직일 수 없는 조건
-            if (userMoveHistory.isNotMovable()) {
-                RetryCommand retryCommand = retryOnException(this::fetchRetryCommand);
-
-                // 재시도 할 경우
-                if (retryCommand.isRetry()) {
-                    bridgeGame.resetPosition();
-                    bridgeGame.increaseTryCount();
-                    userMovingHistory.clearHistory();
-                    continue;
-                }
-
-                // 재시도 하지 않을 경우
-                if (retryCommand.isEnd()) {
-                    outputView.printResult(userMovingHistory.getMoveHistories(), bridgeGame.getTryCount().getValue());
-                    break;
-                }
-
-            }
-
+        printStartMessage();
+        BridgeGame bridgeGame = createBridgeGame();
+        while (bridgeGame.isInProgress()) {
+            MovedHistory userMovedHistory = crossBridgeFromUserCommand(bridgeGame);
+            handleUnsuccessfulMove(userMovedHistory, bridgeGame);
         }
+        printGameFinalResult(bridgeGame);
+    }
 
+    private void handleUnsuccessfulMove(MovedHistory userMovedHistory, BridgeGame bridgeGame) {
+        if (userMovedHistory.isNotMoved()) {
+            RetryCommand retryCommand = retryOnException(this::fetchRetryCommand);
+            handleOnTry(retryCommand, bridgeGame);
+            handleOnQuit(retryCommand, bridgeGame);
+        }
+    }
+
+    private void printGameFinalResult(BridgeGame bridgeGame) {
+        outputView.printResult(userMovingHistory.getMoveHistories(), bridgeGame.getTryCount().getValue());
+    }
+
+    private void printStartMessage() {
+        outputView.printStartMessage();
+    }
+
+    private BridgeGame createBridgeGame() {
+        BridgeSize bridgeSize = retryOnException(this::fetchBridgeSize);
+        return BridgeGame.create(bridgeMaker, bridgeSize);
+    }
+
+    private void handleOnQuit(RetryCommand retryCommand, BridgeGame bridgeGame) {
+        if (retryCommand.isEnd()) {
+            bridgeGame.endGame();
+        }
+    }
+
+    private MovedHistory crossBridgeFromUserCommand(BridgeGame bridgeGame) {
+        MovingCommand movingCommand = retryOnException(this::fetchMovingCommand);
+        MovedHistory userMovedHistory = bridgeGame.move(movingCommand);
+        printUserMoveHistory(userMovedHistory);
+        return userMovedHistory;
+    }
+
+    private void handleOnTry(RetryCommand retryCommand, BridgeGame bridgeGame) {
+        if (retryCommand.isRetry()) {
+            bridgeGame.resetPosition();
+            bridgeGame.increaseTryCount();
+            userMovingHistory.clearHistory();
+        }
+    }
+
+    private void printUserMoveHistory(MovedHistory userMovedHistory) {
+        userMovingHistory.add(userMovedHistory);
+        outputView.printMap(userMovingHistory.getMoveHistories());
     }
 
     private RetryCommand fetchRetryCommand() {
