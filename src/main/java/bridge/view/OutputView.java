@@ -6,6 +6,7 @@ import static bridge.model.MovingCommand.UP_MOVING;
 import java.util.ArrayList;
 import java.util.List;
 import bridge.model.MovedHistory;
+import bridge.model.MovedResult;
 
 /**
  * 사용자에게 게임 진행 상황과 결과를 출력하는 역할을 한다.
@@ -18,20 +19,15 @@ public class OutputView {
      * <p>
      * 출력을 위해 필요한 메서드의 인자(parameter)는 자유롭게 추가하거나 변경할 수 있다.
      */
-    public void printResult(List<MovedHistory> moveHistories, int tryCount) {
+    public void printResult(MovedHistory movedHistory, int tryCount) {
         println("최종 게임 결과");
-        printMap(moveHistories);
-
-        boolean isCrossedAllBridge = moveHistories.stream()
-                .allMatch(MovedHistory::isMovable);
-
-        String message = getCrossedAllBridgeMessage(isCrossedAllBridge);
-        println(String.format("게임 성공 여부: %s", message));
-
+        printMap(movedHistory);
+        boolean movedAllBridge = movedHistory.isMovedAllBridge();
+        println(String.format("게임 성공 여부: %s", getMovedAllBridgeMessage(movedAllBridge)));
         println(String.format("총 시도한 횟수: %d", tryCount));
     }
 
-    private String getCrossedAllBridgeMessage(boolean isCrossedAllBridge) {
+    private String getMovedAllBridgeMessage(boolean isCrossedAllBridge) {
         if (isCrossedAllBridge) {
             return "성공";
         }
@@ -43,7 +39,8 @@ public class OutputView {
      * <p>
      * 출력을 위해 필요한 메서드의 인자(parameter)는 자유롭게 추가하거나 변경할 수 있다.
      */
-    public void printMap(List<MovedHistory> moveHistories) {
+    public void printMap(MovedHistory movedHistory) {
+        List<MovedResult> moveHistories = movedHistory.getMoveHistories();
         String upBridge = String.format("[ %s ]", makeUpBridge(moveHistories));
         String downBridge = String.format("[ %s ]", makeDownBridge(moveHistories));
         String totalBridge = String.format("%s\n%s", upBridge, downBridge);
@@ -51,28 +48,28 @@ public class OutputView {
         printEmptyLine();
     }
 
-    private String makeUpBridge(List<MovedHistory> moveHistories) {
+    private String makeUpBridge(List<MovedResult> moveHistories) {
         List<String> upBridge = new ArrayList<>();
-        for (MovedHistory movedHistory : moveHistories) {
-            if (movedHistory.getMovingCommand() == UP_MOVING) {
-                upBridge.add(movedHistory.getMovable() ? "O" : "X");
+        for (MovedResult movedResult : moveHistories) {
+            if (movedResult.getMovingCommand() == UP_MOVING) {
+                upBridge.add(movedResult.getMovable() ? "O" : "X");
             }
 
-            if (movedHistory.getMovingCommand() == DOWN_MOVING) {
+            if (movedResult.getMovingCommand() == DOWN_MOVING) {
                 upBridge.add(" ");
             }
         }
         return String.join(" | ", upBridge);
     }
 
-    private String makeDownBridge(List<MovedHistory> moveHistories) {
+    private String makeDownBridge(List<MovedResult> moveHistories) {
         List<String> downBridge = new ArrayList<>();
-        for (MovedHistory movedHistory : moveHistories) {
-            if (movedHistory.getMovingCommand() == DOWN_MOVING) {
-                downBridge.add(movedHistory.getMovable() ? "O" : "X");
+        for (MovedResult movedResult : moveHistories) {
+            if (movedResult.getMovingCommand() == DOWN_MOVING) {
+                downBridge.add(movedResult.getMovable() ? "O" : "X");
             }
 
-            if (movedHistory.getMovingCommand() == UP_MOVING) {
+            if (movedResult.getMovingCommand() == UP_MOVING) {
                 downBridge.add(" ");
             }
         }

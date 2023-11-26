@@ -5,9 +5,10 @@ import bridge.BridgeMaker;
 import bridge.model.BridgeGame;
 import bridge.model.BridgeSize;
 import bridge.model.MovedHistory;
+import bridge.model.MovedResult;
 import bridge.model.MovingCommand;
+import bridge.model.Player;
 import bridge.model.RetryCommand;
-import bridge.model.UserMovingHistory;
 import bridge.view.InputView;
 import bridge.view.OutputView;
 
@@ -15,36 +16,34 @@ public class BridgeGameController {
     private final InputView inputView;
     private final OutputView outputView;
     private final BridgeMaker bridgeMaker;
-    private final UserMovingHistory userMovingHistory;
 
-    public BridgeGameController(InputView inputView, OutputView outputView, BridgeMaker bridgeMaker,
-                                UserMovingHistory userMovingHistory) {
+    public BridgeGameController(InputView inputView, OutputView outputView, BridgeMaker bridgeMaker) {
         this.inputView = inputView;
         this.outputView = outputView;
         this.bridgeMaker = bridgeMaker;
-        this.userMovingHistory = userMovingHistory;
     }
 
     public void run() {
         printStartMessage();
         BridgeGame bridgeGame = createBridgeGame();
+        Player player = Player.initialize();
         while (bridgeGame.isInProgress()) {
-            MovedHistory userMovedHistory = crossBridgeFromUserCommand(bridgeGame);
-            handleUnsuccessfulMove(userMovedHistory, bridgeGame);
+            MovedResult movedResult = crossBridge(player, bridgeGame);
+            handleUnsuccessfulMove(player, movedResult, bridgeGame);
         }
-        printGameFinalResult(bridgeGame);
+        printGameFinalResult(player.getMovedHistory(), player.getTryCount().getValue());
     }
 
-    private void handleUnsuccessfulMove(MovedHistory userMovedHistory, BridgeGame bridgeGame) {
-        if (userMovedHistory.isNotMoved()) {
+    private void handleUnsuccessfulMove(Player player, MovedResult userMovedResult, BridgeGame bridgeGame) {
+        if (userMovedResult.isNotMoved()) {
             RetryCommand retryCommand = retryOnException(this::fetchRetryCommand);
-            handleOnReTry(retryCommand, bridgeGame);
+            handleOnReTry(retryCommand, player, bridgeGame);
             handleOnQuit(retryCommand, bridgeGame);
         }
     }
 
-    private void printGameFinalResult(BridgeGame bridgeGame) {
-        outputView.printResult(userMovingHistory.getMoveHistories(), bridgeGame.getTryCount().getValue());
+    private void printGameFinalResult(MovedHistory movedHistory, int tryCount) {
+        outputView.printResult(movedHistory, tryCount);
     }
 
     private void printStartMessage() {
@@ -62,24 +61,24 @@ public class BridgeGameController {
         }
     }
 
-    private MovedHistory crossBridgeFromUserCommand(BridgeGame bridgeGame) {
+    private MovedResult crossBridge(Player player, BridgeGame bridgeGame) {
         MovingCommand movingCommand = retryOnException(this::fetchMovingCommand);
-        MovedHistory userMovedHistory = bridgeGame.move(movingCommand);
-        printUserMoveHistory(userMovedHistory);
-        return userMovedHistory;
+        MovedResult userMovedResult = bridgeGame.move(movingCommand);
+        player.markMovedHistory(userMovedResult);
+        printMovedHistory(player.getMovedHistory());
+        return userMovedResult;
     }
 
-    private void handleOnReTry(RetryCommand retryCommand, BridgeGame bridgeGame) {
+    private void handleOnReTry(RetryCommand retryCommand, Player player, BridgeGame bridgeGame) {
         if (retryCommand.isRetry()) {
             bridgeGame.resetPosition();
-            bridgeGame.increaseTryCount();
-            userMovingHistory.clearHistory();
+            player.increaseTryCount();
+            player.clearHistory();
         }
     }
 
-    private void printUserMoveHistory(MovedHistory userMovedHistory) {
-        userMovingHistory.add(userMovedHistory);
-        outputView.printMap(userMovingHistory.getMoveHistories());
+    private void printMovedHistory(MovedHistory movedHistory) {
+        outputView.printMap(movedHistory);
     }
 
     private RetryCommand fetchRetryCommand() {

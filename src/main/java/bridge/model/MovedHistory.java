@@ -1,44 +1,33 @@
 package bridge.model;
 
-import static bridge.model.MovingCommand.DOWN_MOVING;
-import static bridge.model.MovingCommand.UP_MOVING;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.stream.Stream;
+public class MovedHistory {
+    private final List<MovedResult> moveHistories;
 
-public enum MovedHistory {
-    UP_TRUE(UP_MOVING, true),
-    UP_FALSE(UP_MOVING, false),
-    DOWN_TRUE(DOWN_MOVING, true),
-    DOWN_FALSE(DOWN_MOVING, false);
-
-    private final MovingCommand movingCommand;
-    private final boolean movable;
-
-    MovedHistory(MovingCommand movingCommand, boolean movable) {
-        this.movingCommand = movingCommand;
-        this.movable = movable;
+    private MovedHistory(List<MovedResult> moveHistories) {
+        this.moveHistories = new ArrayList<>(moveHistories);
     }
 
-    public static MovedHistory of(MovingCommand movingCommand, boolean movable) {
-        return Stream.of(values())
-                .filter(moveHistory -> moveHistory.movingCommand == movingCommand && moveHistory.movable == movable)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("이동하고자 하는 명령어와 이동 가능 여부에 적합하지 않습니다."));
+    public static MovedHistory initialize() {
+        return new MovedHistory(new ArrayList<>());
     }
 
-    public boolean isMovable() {
-        return movable;
+    public void add(MovedResult userMovedResult) {
+        moveHistories.add(userMovedResult);
     }
 
-    public boolean isNotMoved() {
-        return !movable;
+    public void clearHistory() {
+        moveHistories.clear();
     }
 
-    public boolean getMovable() {
-        return movable;
+    public boolean isMovedAllBridge() {
+        return moveHistories.stream()
+                .allMatch(MovedResult::isMovable);
     }
 
-    public MovingCommand getMovingCommand() {
-        return movingCommand;
+    public List<MovedResult> getMoveHistories() {
+        return new ArrayList<>(moveHistories);
     }
 }

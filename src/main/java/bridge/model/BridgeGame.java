@@ -8,12 +8,10 @@ import bridge.BridgeMaker;
  */
 public class BridgeGame {
     private final Bridge bridge;
-    private TryCount tryCount;
     private boolean isFinished;
 
-    private BridgeGame(Bridge bridge, TryCount tryCount, boolean isFinished) {
+    private BridgeGame(Bridge bridge, boolean isFinished) {
         this.bridge = bridge;
-        this.tryCount = tryCount;
         this.isFinished = isFinished;
     }
 
@@ -21,19 +19,14 @@ public class BridgeGame {
         List<String> bridgeElementSymbols = bridgeMaker.makeBridge(bridgeSize.getSize());
         List<BridgeElement> bridgeElements = convertToBridgeElements(bridgeElementSymbols);
         Bridge bridge = Bridge.from(bridgeElements);
-        TryCount firstTryCount = TryCount.firstTry();
 
-        return new BridgeGame(bridge, firstTryCount, false);
+        return new BridgeGame(bridge, false);
     }
 
     private static List<BridgeElement> convertToBridgeElements(List<String> bridgeElementSymbols) {
         return bridgeElementSymbols.stream()
                 .map(BridgeElement::from)
                 .toList();
-    }
-
-    public void increaseTryCount() {
-        tryCount = tryCount.increase();
     }
 
     public void resetPosition() {
@@ -45,11 +38,11 @@ public class BridgeGame {
      * <p>
      * 이동을 위해 필요한 메서드의 반환 타입(return type), 인자(parameter)는 자유롭게 추가하거나 변경할 수 있다.
      */
-    public MovedHistory move(MovingCommand movingCommand) {
+    public MovedResult move(MovingCommand movingCommand) {
         boolean movable = bridge.isMovable(movingCommand);
         isFinished = bridge.isFinished();
 
-        return MovedHistory.of(movingCommand, movable);
+        return MovedResult.of(movingCommand, movable);
     }
 
     /**
@@ -68,7 +61,4 @@ public class BridgeGame {
         return !isFinished;
     }
 
-    public TryCount getTryCount() {
-        return tryCount;
-    }
 }
