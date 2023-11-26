@@ -2,6 +2,7 @@ package bridge.controller;
 
 import java.util.function.Supplier;
 import bridge.BridgeNumberGenerator;
+import bridge.model.BridgeGame;
 import bridge.model.BridgeSize;
 import bridge.view.InputView;
 import bridge.view.OutputView;
@@ -20,7 +21,8 @@ public class BridgeGameController {
 
     public void run() {
         outputView.printStartMessage();
-        retryOnException(this::fetchBridgeSize);
+        BridgeSize bridgeSize = retryOnException(this::fetchBridgeSize);
+        BridgeGame bridgeGame = BridgeGame.create(bridgeNumberGenerator, bridgeSize);
 
     }
 
