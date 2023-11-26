@@ -71,7 +71,7 @@ public class BridgeGameController {
 
     private void handleOnReTry(RetryCommand retryCommand, Player player, BridgeGame bridgeGame) {
         if (retryCommand.isRetry()) {
-            bridgeGame.resetPosition();
+            bridgeGame.retry();
             player.increaseTryCount();
             player.clearHistory();
         }

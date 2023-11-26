@@ -20,12 +20,14 @@ public class BridgeMaker {
      * @return 입력받은 길이에 해당하는 다리 모양. 위 칸이면 "U", 아래 칸이면 "D"로 표현해야 한다.
      */
     public List<String> makeBridge(int size) {
-        return Stream.generate(() -> createBridgeElement(bridgeNumberGenerator))
+        return Stream.generate(() -> createBridgeElementSymbol(bridgeNumberGenerator))
                 .limit(size)
                 .toList();
     }
 
-    private String createBridgeElement(BridgeNumberGenerator numberGenerator) {
-        return BridgeElement.getBridgeElementSymbol(numberGenerator.generate());
+    private String createBridgeElementSymbol(BridgeNumberGenerator numberGenerator) {
+        int numberOfBridge = numberGenerator.generate();
+
+        return BridgeElement.getBridgeElementSymbol(numberOfBridge);
     }
 }

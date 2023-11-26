@@ -14,6 +14,19 @@ import bridge.model.MovedResult;
 public class OutputView {
     private static final String EXCEPTION_FORMAT = "[ERROR] %s";
 
+    public void printStartMessage() {
+        println("다리 건너기 게임을 시작합니다.");
+        printEmptyLine();
+    }
+
+    private void printEmptyLine() {
+        println("");
+    }
+
+    private void println(String message) {
+        System.out.println(message);
+    }
+
     /**
      * 게임의 최종 결과를 정해진 형식에 맞춰 출력한다.
      * <p>
@@ -74,19 +87,6 @@ public class OutputView {
             }
         }
         return String.join(" | ", downBridge);
-    }
-
-    private void printEmptyLine() {
-        println("");
-    }
-
-    private void println(String message) {
-        System.out.println(message);
-    }
-
-    public void printStartMessage() {
-        println("다리 건너기 게임을 시작합니다.");
-        printEmptyLine();
     }
 
     public void printExceptionMessage(String message) {
