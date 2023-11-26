@@ -24,9 +24,7 @@ public class OutputView {
 
     public void printStartMessage() {
         println("다리 건너기 게임을 시작합니다.");
-    }
-    public void printExceptionMessage(String message) {
-        println(String.format(EXCEPTION_FORMAT, message);
+        printEmptyLine();
     }
 
     private void println(String message) {
@@ -35,5 +33,9 @@ public class OutputView {
 
     private void printEmptyLine() {
         println("");
+    }
+
+    public void printExceptionMessage(String message) {
+        println(String.format(EXCEPTION_FORMAT, message));
     }
 }
