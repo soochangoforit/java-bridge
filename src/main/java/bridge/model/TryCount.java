@@ -17,11 +17,15 @@ public final class TryCount {
     }
 
     public static TryCount firstTry() {
-        return new TryCount(0);
+        return new TryCount(1);
     }
 
     public TryCount increase() {
         return new TryCount(value + 1);
+    }
+
+    public int getValue() {
+        return value;
     }
 
     @Override

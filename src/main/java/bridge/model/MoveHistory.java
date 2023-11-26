@@ -26,6 +26,10 @@ public enum MoveHistory {
                 .orElseThrow(() -> new IllegalArgumentException("이동하고자 하는 명령어와 이동 가능 여부에 적합하지 않습니다."));
     }
 
+    public boolean isMovable() {
+        return movable;
+    }
+
     public boolean isNotMovable() {
         return !movable;
     }

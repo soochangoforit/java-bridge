@@ -19,6 +19,10 @@ public enum RetryCommand {
                 .orElseThrow(() -> new IllegalArgumentException("재시도 여부에 적합하지 않은 명령어입니다."));
     }
 
+    public boolean isEnd() {
+        return this == END;
+    }
+
     public boolean isRetry() {
         return this == RETRY;
     }

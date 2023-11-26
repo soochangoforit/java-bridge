@@ -35,4 +35,8 @@ public class Bridge {
     public void resetPosition() {
         currentPosition = 0;
     }
+
+    public boolean isFinished() {
+        return currentPosition == bridgeElements.size();
+    }
 }

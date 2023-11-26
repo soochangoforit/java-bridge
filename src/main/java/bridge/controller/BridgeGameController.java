@@ -37,19 +37,32 @@ public class BridgeGameController {
             userMovingHistory.add(userMoveHistory);
             outputView.printMap(userMovingHistory.getMoveHistories());
 
+            // 마지막까지 움직인 경우
+            if (bridgeGame.isFinished()) {
+                outputView.printResult(userMovingHistory.getMoveHistories(), bridgeGame.getTryCount().getValue());
+                break;
+            }
+
+            // 움직일 수 없는 조건
             if (userMoveHistory.isNotMovable()) {
                 RetryCommand retryCommand = retryOnException(this::fetchRetryCommand);
 
                 // 재시도 할 경우
                 if (retryCommand.isRetry()) {
                     bridgeGame.resetPosition();
+                    bridgeGame.increaseTryCount();
                     userMovingHistory.clearHistory();
                     continue;
                 }
 
                 // 재시도 하지 않을 경우
+                if (retryCommand.isEnd()) {
+                    outputView.printResult(userMovingHistory.getMoveHistories(), bridgeGame.getTryCount().getValue());
+                    break;
+                }
 
             }
+
         }
 
     }
