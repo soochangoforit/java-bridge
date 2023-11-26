@@ -6,6 +6,8 @@ public enum RetryCommand {
     RETRY("R"),
     END("Q");
 
+    private static final String INVALID_RETRY_COMMAND = "다리 이동에 적합하지 않은 명령어입니다.";
+    
     private final String command;
 
     RetryCommand(String command) {
@@ -16,7 +18,7 @@ public enum RetryCommand {
         return Stream.of(values())
                 .filter(retryCommand -> retryCommand.command.equals(command))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("재시도 여부에 적합하지 않은 명령어입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_RETRY_COMMAND));
     }
 
     public boolean isEnd() {

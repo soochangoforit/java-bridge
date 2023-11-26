@@ -6,13 +6,13 @@ import bridge.BridgeMaker;
 /**
  * 다리 건너기 게임을 관리하는 클래스
  */
-public class BridgeGame {
+public final class BridgeGame {
     private final Bridge bridge;
-    private boolean isFinished;
+    private BridgeGameStatus gameStatus;
 
-    private BridgeGame(Bridge bridge, boolean isFinished) {
+    private BridgeGame(Bridge bridge, BridgeGameStatus gameStatus) {
         this.bridge = bridge;
-        this.isFinished = isFinished;
+        this.gameStatus = gameStatus;
     }
 
     public static BridgeGame create(BridgeMaker bridgeMaker, BridgeSize bridgeSize) {
@@ -20,7 +20,7 @@ public class BridgeGame {
         List<BridgeElement> bridgeElements = convertToBridgeElements(bridgeElementSymbols);
         Bridge bridge = Bridge.from(bridgeElements);
 
-        return new BridgeGame(bridge, false);
+        return new BridgeGame(bridge, BridgeGameStatus.IN_PROGRESS);
     }
 
     private static List<BridgeElement> convertToBridgeElements(List<String> bridgeElementSymbols) {
@@ -29,20 +29,18 @@ public class BridgeGame {
                 .toList();
     }
 
-    public void resetPosition() {
-        bridge.resetPosition();
-    }
-
     /**
      * 사용자가 칸을 이동할 때 사용하는 메서드
      * <p>
      * 이동을 위해 필요한 메서드의 반환 타입(return type), 인자(parameter)는 자유롭게 추가하거나 변경할 수 있다.
      */
     public MovedResult move(MovingCommand movingCommand) {
-        boolean movable = bridge.isMovable(movingCommand);
-        isFinished = bridge.isFinished();
+        boolean isMoved = bridge.isMovable(movingCommand);
+        if (bridge.isFinished()) {
+            gameStatus = BridgeGameStatus.FINISHED;
+        }
 
-        return MovedResult.of(movingCommand, movable);
+        return MovedResult.of(movingCommand, isMoved);
     }
 
     /**
@@ -55,11 +53,11 @@ public class BridgeGame {
     }
 
     public void endGame() {
-        isFinished = true;
+        gameStatus = BridgeGameStatus.FINISHED;
     }
 
     public boolean isInProgress() {
-        return !isFinished;
+        return gameStatus.isInProgress();
     }
 
 }

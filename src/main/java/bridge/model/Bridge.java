@@ -3,7 +3,9 @@ package bridge.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Bridge {
+public final class Bridge {
+    private static final int INITIAL_POSITION = 0;
+
     private final List<BridgeElement> bridgeElements;
     private int currentPosition;
 
@@ -13,22 +15,16 @@ public class Bridge {
     }
 
     public static Bridge from(List<BridgeElement> bridgeElements) {
-        int currentPosition = 0;
-
-        return new Bridge(bridgeElements, currentPosition);
+        return new Bridge(bridgeElements, INITIAL_POSITION);
     }
 
     public boolean isMovable(MovingCommand movingCommand) {
         BridgeElement currentBridgeElement = bridgeElements.get(currentPosition);
-
         boolean movable = movingCommand.isMovable(currentBridgeElement);
-
         if (movable) {
-            currentPosition++;
+            ++currentPosition;
             return true;
         }
-
-        currentPosition = 0;
         return false;
     }
 

@@ -3,7 +3,7 @@ package bridge.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovedHistory {
+public final class MovedHistory {
     private final List<MovedResult> moveHistories;
 
     private MovedHistory(List<MovedResult> moveHistories) {
@@ -24,7 +24,7 @@ public class MovedHistory {
 
     public boolean isMovedAllBridge() {
         return moveHistories.stream()
-                .allMatch(MovedResult::isMovable);
+                .allMatch(MovedResult::isMoved);
     }
 
     public List<MovedResult> getMoveHistories() {

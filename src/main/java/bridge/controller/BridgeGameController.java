@@ -31,7 +31,7 @@ public class BridgeGameController {
             MovedResult movedResult = crossBridge(player, bridgeGame);
             handleUnsuccessfulMove(player, movedResult, bridgeGame);
         }
-        printGameFinalResult(player.getMovedHistory(), player.getTryCount().getValue());
+        printGameFinalResult(player.getMovedHistory(), player.getTryCount().getCount());
     }
 
     private void handleUnsuccessfulMove(Player player, MovedResult userMovedResult, BridgeGame bridgeGame) {

@@ -64,29 +64,50 @@ public class OutputView {
     private String makeUpBridge(List<MovedResult> moveHistories) {
         List<String> upBridge = new ArrayList<>();
         for (MovedResult movedResult : moveHistories) {
-            if (movedResult.getMovingCommand() == UP_MOVING) {
-                upBridge.add(movedResult.getMovable() ? "O" : "X");
-            }
-
-            if (movedResult.getMovingCommand() == DOWN_MOVING) {
-                upBridge.add(" ");
-            }
+            addElementToUpBridge(movedResult, upBridge);
         }
         return String.join(" | ", upBridge);
+    }
+
+    private void addElementToUpBridge(MovedResult movedResult, List<String> upBridge) {
+        if (movedResult.getMovingCommand() == UP_MOVING) {
+            addElement(movedResult, upBridge);
+        }
+
+        if (movedResult.getMovingCommand() == DOWN_MOVING) {
+            addEmptySpace(upBridge);
+        }
+    }
+
+    private static void addEmptySpace(List<String> upBridge) {
+        upBridge.add(" ");
+    }
+
+    private void addElement(MovedResult movedResult, List<String> bridge) {
+        if (movedResult.getMovable()) {
+            bridge.add("O");
+        }
+        if (!movedResult.getMovable()) {
+            bridge.add("X");
+        }
     }
 
     private String makeDownBridge(List<MovedResult> moveHistories) {
         List<String> downBridge = new ArrayList<>();
         for (MovedResult movedResult : moveHistories) {
-            if (movedResult.getMovingCommand() == DOWN_MOVING) {
-                downBridge.add(movedResult.getMovable() ? "O" : "X");
-            }
-
-            if (movedResult.getMovingCommand() == UP_MOVING) {
-                downBridge.add(" ");
-            }
+            addElementToDownBridge(movedResult, downBridge);
         }
         return String.join(" | ", downBridge);
+    }
+
+    private void addElementToDownBridge(MovedResult movedResult, List<String> downBridge) {
+        if (movedResult.getMovingCommand() == DOWN_MOVING) {
+            addElement(movedResult, downBridge);
+        }
+
+        if (movedResult.getMovingCommand() == UP_MOVING) {
+            addEmptySpace(downBridge);
+        }
     }
 
     public void printExceptionMessage(String message) {

@@ -3,29 +3,34 @@ package bridge.model;
 import java.util.Objects;
 
 public final class TryCount {
-    private final int value;
+    private static final int FIRST_TRY_COUNT = 1;
+    private static final int ONE_COUNT = 1;
+    private static final String INVALID_TRY_COUNT = "시도 횟수는 %d 이상의 자연수만 가능합니다.";
+    
+    private final int count;
 
-    private TryCount(int value) {
-        validate(value);
-        this.value = value;
+    private TryCount(int count) {
+        validate(count);
+        this.count = count;
     }
 
     private void validate(int value) {
-        if (value < 0) {
-            throw new IllegalArgumentException("시도 횟수는 0 이상의 자연수만 가능합니다.");
+        if (value < FIRST_TRY_COUNT) {
+            String exceptionMessage = String.format(INVALID_TRY_COUNT, FIRST_TRY_COUNT);
+            throw new IllegalArgumentException(exceptionMessage);
         }
     }
 
-    public static TryCount firstTry() {
-        return new TryCount(1);
+    public static TryCount firstTryCount() {
+        return new TryCount(FIRST_TRY_COUNT);
     }
 
     public TryCount increase() {
-        return new TryCount(value + 1);
+        return new TryCount(count + ONE_COUNT);
     }
 
-    public int getValue() {
-        return value;
+    public int getCount() {
+        return count;
     }
 
     @Override
@@ -37,11 +42,11 @@ public final class TryCount {
             return false;
         }
         TryCount tryCount = (TryCount) o;
-        return value == tryCount.value;
+        return count == tryCount.count;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value);
+        return Objects.hash(count);
     }
 }

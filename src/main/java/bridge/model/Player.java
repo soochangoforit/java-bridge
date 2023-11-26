@@ -1,6 +1,6 @@
 package bridge.model;
 
-public class Player {
+public final class Player {
     private final MovedHistory movedHistory;
     private TryCount tryCount;
 
@@ -10,7 +10,7 @@ public class Player {
     }
 
     public static Player initialize() {
-        TryCount tryCount = TryCount.firstTry();
+        TryCount tryCount = TryCount.firstTryCount();
         MovedHistory movedHistory = MovedHistory.initialize();
 
         return new Player(tryCount, movedHistory);

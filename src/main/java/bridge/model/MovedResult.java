@@ -11,31 +11,33 @@ public enum MovedResult {
     DOWN_TRUE(DOWN_MOVING, true),
     DOWN_FALSE(DOWN_MOVING, false);
 
+    private static final String INVALID_MOVING_COMMAND = "이동하고자 하는 명령어와 이동 가능 여부에 적합하지 않습니다.";
+
     private final MovingCommand movingCommand;
-    private final boolean movable;
+    private final boolean moved;
 
-    MovedResult(MovingCommand movingCommand, boolean movable) {
+    MovedResult(MovingCommand movingCommand, boolean moved) {
         this.movingCommand = movingCommand;
-        this.movable = movable;
+        this.moved = moved;
     }
 
-    public static MovedResult of(MovingCommand movingCommand, boolean movable) {
+    public static MovedResult of(MovingCommand movingCommand, boolean isMoved) {
         return Stream.of(values())
-                .filter(moveHistory -> moveHistory.movingCommand == movingCommand && moveHistory.movable == movable)
+                .filter(moveHistory -> moveHistory.movingCommand == movingCommand && moveHistory.moved == isMoved)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("이동하고자 하는 명령어와 이동 가능 여부에 적합하지 않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_MOVING_COMMAND));
     }
 
-    public boolean isMovable() {
-        return movable;
+    public boolean isMoved() {
+        return moved;
     }
 
     public boolean isNotMoved() {
-        return !movable;
+        return !moved;
     }
 
     public boolean getMovable() {
-        return movable;
+        return moved;
     }
 
     public MovingCommand getMovingCommand() {
