@@ -6,6 +6,7 @@ import bridge.model.BridgeGame;
 import bridge.model.BridgeSize;
 import bridge.model.MoveHistory;
 import bridge.model.MovingCommand;
+import bridge.model.RetryCommand;
 import bridge.model.UserMovingHistory;
 import bridge.view.InputView;
 import bridge.view.OutputView;
@@ -29,12 +30,33 @@ public class BridgeGameController {
         BridgeSize bridgeSize = retryOnException(this::fetchBridgeSize);
         BridgeGame bridgeGame = BridgeGame.create(bridgeNumberGenerator, bridgeSize);
 
-        MovingCommand movingCommand = retryOnException(this::fetchMovingCommand);
+        while (true) {
+            MovingCommand movingCommand = retryOnException(this::fetchMovingCommand);
 
-        MoveHistory userMoveHistory = bridgeGame.move(movingCommand);
-        userMovingHistory.add(userMoveHistory);
-        outputView.printMap(userMovingHistory.getMoveHistories());
+            MoveHistory userMoveHistory = bridgeGame.move(movingCommand);
+            userMovingHistory.add(userMoveHistory);
+            outputView.printMap(userMovingHistory.getMoveHistories());
 
+            if (userMoveHistory.isNotMovable()) {
+                RetryCommand retryCommand = retryOnException(this::fetchRetryCommand);
+
+                // 재시도 할 경우
+                if (retryCommand.isRetry()) {
+                    bridgeGame.resetPosition();
+                    userMovingHistory.clearHistory();
+                    continue;
+                }
+
+                // 재시도 하지 않을 경우
+
+            }
+        }
+
+    }
+
+    private RetryCommand fetchRetryCommand() {
+        String rawRetryCommand = inputView.readGameCommand();
+        return RetryCommand.from(rawRetryCommand);
     }
 
     private MovingCommand fetchMovingCommand() {

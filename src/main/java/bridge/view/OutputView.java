@@ -23,6 +23,7 @@ public class OutputView {
         String downBridge = String.format("[ %s ]", makeDownBridge(moveHistories));
         String totalBridge = String.format("%s\n%s", upBridge, downBridge);
         println(totalBridge);
+        printEmptyLine();
     }
 
     private String makeUpBridge(List<MoveHistory> moveHistories) {
@@ -57,6 +58,10 @@ public class OutputView {
         System.out.println(message);
     }
 
+    private void printEmptyLine() {
+        println("");
+    }
+
     /**
      * 게임의 최종 결과를 정해진 형식에 맞춰 출력한다.
      * <p>
@@ -68,10 +73,6 @@ public class OutputView {
     public void printStartMessage() {
         println("다리 건너기 게임을 시작합니다.");
         printEmptyLine();
-    }
-
-    private void printEmptyLine() {
-        println("");
     }
 
     public void printExceptionMessage(String message) {

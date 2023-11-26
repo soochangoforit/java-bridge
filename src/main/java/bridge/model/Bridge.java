@@ -32,4 +32,7 @@ public class Bridge {
         return false;
     }
 
+    public void resetPosition() {
+        currentPosition = 0;
+    }
 }

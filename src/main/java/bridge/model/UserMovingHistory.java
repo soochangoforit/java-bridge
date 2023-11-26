@@ -18,6 +18,10 @@ public class UserMovingHistory {
         moveHistories.add(userMoveHistory);
     }
 
+    public void clearHistory() {
+        moveHistories.clear();
+    }
+
     public List<MoveHistory> getMoveHistories() {
         return new ArrayList<>(moveHistories);
     }
