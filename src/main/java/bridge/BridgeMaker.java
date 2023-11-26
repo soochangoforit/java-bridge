@@ -2,6 +2,7 @@ package bridge;
 
 import java.util.List;
 import java.util.stream.Stream;
+import bridge.model.BridgeElement;
 
 /**
  * 다리의 길이를 입력 받아서 다리를 생성해주는 역할을 한다.
@@ -25,10 +26,6 @@ public class BridgeMaker {
     }
 
     private String createBridgeElement(BridgeNumberGenerator numberGenerator) {
-        int number = numberGenerator.generate();
-        if (number == 1) {
-            return "U";
-        }
-        return "D";
+        return BridgeElement.getBridgeElementSymbol(numberGenerator.generate());
     }
 }

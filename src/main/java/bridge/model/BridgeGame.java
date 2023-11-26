@@ -19,13 +19,17 @@ public class BridgeGame {
 
     public static BridgeGame create(BridgeMaker bridgeMaker, BridgeSize bridgeSize) {
         List<String> bridgeElementSymbols = bridgeMaker.makeBridge(bridgeSize.getSize());
-        List<BridgeElement> bridgeElements = bridgeElementSymbols.stream()
-                .map(BridgeElement::from)
-                .toList();
+        List<BridgeElement> bridgeElements = convertToBridgeElements(bridgeElementSymbols);
         Bridge bridge = Bridge.from(bridgeElements);
         TryCount firstTryCount = TryCount.firstTry();
 
         return new BridgeGame(bridge, firstTryCount, false);
+    }
+
+    private static List<BridgeElement> convertToBridgeElements(List<String> bridgeElementSymbols) {
+        return bridgeElementSymbols.stream()
+                .map(BridgeElement::from)
+                .toList();
     }
 
     public void increaseTryCount() {

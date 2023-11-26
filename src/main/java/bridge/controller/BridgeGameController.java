@@ -38,7 +38,7 @@ public class BridgeGameController {
     private void handleUnsuccessfulMove(MovedHistory userMovedHistory, BridgeGame bridgeGame) {
         if (userMovedHistory.isNotMoved()) {
             RetryCommand retryCommand = retryOnException(this::fetchRetryCommand);
-            handleOnTry(retryCommand, bridgeGame);
+            handleOnReTry(retryCommand, bridgeGame);
             handleOnQuit(retryCommand, bridgeGame);
         }
     }
@@ -69,7 +69,7 @@ public class BridgeGameController {
         return userMovedHistory;
     }
 
-    private void handleOnTry(RetryCommand retryCommand, BridgeGame bridgeGame) {
+    private void handleOnReTry(RetryCommand retryCommand, BridgeGame bridgeGame) {
         if (retryCommand.isRetry()) {
             bridgeGame.resetPosition();
             bridgeGame.increaseTryCount();
