@@ -33,6 +33,7 @@ public class BridgeGameController {
 
         MoveHistory userMoveHistory = bridgeGame.move(movingCommand);
         userMovingHistory.add(userMoveHistory);
+        outputView.printMap(userMovingHistory.getMoveHistories());
 
     }
 

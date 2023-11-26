@@ -17,4 +17,8 @@ public class UserMovingHistory {
     public void add(MoveHistory userMoveHistory) {
         moveHistories.add(userMoveHistory);
     }
+
+    public List<MoveHistory> getMoveHistories() {
+        return new ArrayList<>(moveHistories);
+    }
 }
