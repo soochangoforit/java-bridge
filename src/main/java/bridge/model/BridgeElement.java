@@ -18,4 +18,12 @@ public enum BridgeElement {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("다리를 생성할 수 없는 숫자입니다."));
     }
+
+    public boolean isDown() {
+        return this == DOWN;
+    }
+
+    public boolean isUp() {
+        return this == UP;
+    }
 }

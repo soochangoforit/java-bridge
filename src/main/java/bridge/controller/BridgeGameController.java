@@ -4,7 +4,9 @@ import java.util.function.Supplier;
 import bridge.BridgeNumberGenerator;
 import bridge.model.BridgeGame;
 import bridge.model.BridgeSize;
+import bridge.model.MoveHistory;
 import bridge.model.MovingCommand;
+import bridge.model.UserMovingHistory;
 import bridge.view.InputView;
 import bridge.view.OutputView;
 
@@ -12,12 +14,14 @@ public class BridgeGameController {
     private final InputView inputView;
     private final OutputView outputView;
     private final BridgeNumberGenerator bridgeNumberGenerator;
+    private final UserMovingHistory userMovingHistory;
 
     public BridgeGameController(InputView inputView, OutputView outputView,
-                                BridgeNumberGenerator bridgeNumberGenerator) {
+                                BridgeNumberGenerator bridgeNumberGenerator, UserMovingHistory userMovingHistory) {
         this.inputView = inputView;
         this.outputView = outputView;
         this.bridgeNumberGenerator = bridgeNumberGenerator;
+        this.userMovingHistory = userMovingHistory;
     }
 
     public void run() {
@@ -26,6 +30,9 @@ public class BridgeGameController {
         BridgeGame bridgeGame = BridgeGame.create(bridgeNumberGenerator, bridgeSize);
 
         MovingCommand movingCommand = retryOnException(this::fetchMovingCommand);
+
+        MoveHistory userMoveHistory = bridgeGame.move(movingCommand);
+        userMovingHistory.add(userMoveHistory);
 
     }
 

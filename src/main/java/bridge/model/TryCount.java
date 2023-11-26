@@ -20,6 +20,10 @@ public final class TryCount {
         return new TryCount(0);
     }
 
+    public TryCount increase() {
+        return new TryCount(value + 1);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
