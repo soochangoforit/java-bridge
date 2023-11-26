@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Stream;
 import bridge.view.validator.BlankValidator;
 import bridge.view.validator.DigitsOnlyValidator;
+import bridge.view.validator.SingleCharacterValidator;
 import camp.nextstep.edu.missionutils.Console;
 
 /**
@@ -53,7 +54,15 @@ public class InputView {
      * 사용자가 이동할 칸을 입력받는다.
      */
     public String readMoving() {
-        return null;
+        println("이동할 칸을 선택해주세요. (위: U, 아래: D)");
+        String rawMovingCommand = readLine();
+        validateMovingCommand(rawMovingCommand);
+        return rawMovingCommand;
+    }
+
+    private void validateMovingCommand(String rawMovingCommand) {
+        BlankValidator.validate(rawMovingCommand);
+        SingleCharacterValidator.validate(rawMovingCommand);
     }
 
     /**

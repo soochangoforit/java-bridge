@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 import bridge.BridgeNumberGenerator;
 import bridge.model.BridgeGame;
 import bridge.model.BridgeSize;
+import bridge.model.MovingCommand;
 import bridge.view.InputView;
 import bridge.view.OutputView;
 
@@ -24,6 +25,13 @@ public class BridgeGameController {
         BridgeSize bridgeSize = retryOnException(this::fetchBridgeSize);
         BridgeGame bridgeGame = BridgeGame.create(bridgeNumberGenerator, bridgeSize);
 
+        MovingCommand movingCommand = retryOnException(this::fetchMovingCommand);
+
+    }
+
+    private MovingCommand fetchMovingCommand() {
+        String rawMovingCommand = inputView.readMoving();
+        return MovingCommand.from(rawMovingCommand);
     }
 
     private BridgeSize fetchBridgeSize() {
