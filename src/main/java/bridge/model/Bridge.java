@@ -16,7 +16,7 @@ public final class Bridge {
 
     public boolean isMovable(MovePosition movePosition, MoveDirection moveDirection) {
         BridgeElement currentBridgeElement = bridgeElements.get(movePosition.getValue());
-        return moveDirection.isMovable(currentBridgeElement);
+        return moveDirection.canMove(currentBridgeElement);
     }
 
     public int getSize() {

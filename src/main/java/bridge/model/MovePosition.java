@@ -8,7 +8,7 @@ public final class MovePosition {
 
     private final int value;
 
-    private MovePosition(int value) {
+    MovePosition(int value) {
         validate(value);
         this.value = value;
     }
@@ -23,7 +23,7 @@ public final class MovePosition {
         return new MovePosition(DEFAULT_POSITION);
     }
 
-    public boolean isLastPosition(int bridgeSize) {
+    public boolean isSame(int bridgeSize) {
         return value == bridgeSize;
     }
 

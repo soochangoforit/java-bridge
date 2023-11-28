@@ -8,7 +8,7 @@ public final class TryCount {
 
     private final int count;
 
-    private TryCount(int count) {
+    TryCount(int count) {
         validate(count);
         this.count = count;
     }

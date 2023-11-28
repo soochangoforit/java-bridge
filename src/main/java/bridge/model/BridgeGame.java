@@ -10,7 +10,7 @@ public final class BridgeGame {
     private final Bridge bridge;
     private BridgeGameStatus gameStatus;
 
-    private BridgeGame(Bridge bridge, BridgeGameStatus gameStatus) {
+    BridgeGame(Bridge bridge, BridgeGameStatus gameStatus) {
         this.bridge = bridge;
         this.gameStatus = gameStatus;
     }
