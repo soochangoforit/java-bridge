@@ -20,7 +20,7 @@ public enum MoveDirection {
                 .orElseThrow(() -> new IllegalArgumentException(INVALID_MOVE_DIRECTION));
     }
 
-    public boolean isMovable(BridgeElement currentBridgeElement) {
+    public boolean canMove(BridgeElement currentBridgeElement) {
         return movedUp(currentBridgeElement) || movedDown(currentBridgeElement);
     }
 

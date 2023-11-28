@@ -1,7 +1,7 @@
 package bridge.view.print;
 
 public interface Printer {
-    void printLine(String message);
+    void println(String message);
 
     void printEmptyLine();
 }

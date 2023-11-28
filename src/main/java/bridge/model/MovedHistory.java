@@ -6,7 +6,7 @@ import java.util.List;
 public final class MovedHistory {
     private final List<MovedResult> moveHistories;
 
-    private MovedHistory(List<MovedResult> moveHistories) {
+    MovedHistory(List<MovedResult> moveHistories) {
         this.moveHistories = new ArrayList<>(moveHistories);
     }
 

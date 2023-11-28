@@ -20,7 +20,7 @@ public class InputView {
      * 다리의 길이를 입력받는다.
      */
     public int readBridgeSize() {
-        printer.printLine("다리의 길이를 입력해주세요.");
+        printer.println("다리의 길이를 입력해주세요.");
         String rawBridgeSize = readLine();
         printer.printEmptyLine();
         validateBridgeSize(rawBridgeSize);
@@ -48,14 +48,10 @@ public class InputView {
      * 사용자가 이동할 칸을 입력받는다.
      */
     public String readMoving() {
-        println("이동할 칸을 선택해주세요. (위: U, 아래: D)");
+        printer.println("이동할 칸을 선택해주세요. (위: U, 아래: D)");
         String rawMovingCommand = readLine();
         validateMovingCommand(rawMovingCommand);
         return rawMovingCommand;
-    }
-
-    private void println(String message) {
-        System.out.println(message);
     }
 
     private void validateMovingCommand(String rawMovingCommand) {
@@ -67,7 +63,7 @@ public class InputView {
      * 사용자가 게임을 다시 시도할지 종료할지 여부를 입력받는다.
      */
     public String readGameCommand() {
-        println("게임을 다시 시도할지 여부를 입력해주세요. (재시도: R, 종료: Q)");
+        printer.println("게임을 다시 시도할지 여부를 입력해주세요. (재시도: R, 종료: Q)");
         String rawRetryCommand = readLine();
         validateRetryCommand(rawRetryCommand);
         return rawRetryCommand;

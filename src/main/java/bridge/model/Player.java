@@ -5,7 +5,7 @@ public final class Player {
     private MovePosition movePosition;
     private TryCount tryCount;
 
-    public Player(MovedHistory movedHistory, MovePosition movePosition, TryCount tryCount) {
+    Player(MovedHistory movedHistory, MovePosition movePosition, TryCount tryCount) {
         this.movedHistory = movedHistory;
         this.movePosition = movePosition;
         this.tryCount = tryCount;
@@ -32,7 +32,7 @@ public final class Player {
     }
 
     public boolean crossAllBridge(Bridge bridge) {
-        return movePosition.isLastPosition(bridge.getSize());
+        return movePosition.isSame(bridge.getSize());
     }
 
     public void resetAll() {

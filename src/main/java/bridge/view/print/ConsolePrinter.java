@@ -2,7 +2,7 @@ package bridge.view.print;
 
 public class ConsolePrinter implements Printer {
     @Override
-    public void printLine(String message) {
+    public void println(String message) {
         System.out.println(message);
     }
 
