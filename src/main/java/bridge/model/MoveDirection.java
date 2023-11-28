@@ -2,22 +2,22 @@ package bridge.model;
 
 import java.util.stream.Stream;
 
-public enum MovingCommand {
+public enum MoveDirection {
     UP_MOVING("U"),
     DOWN_MOVING("D");
 
-    private static final String INVALID_MOVING_COMMAND = "다리 이동에 적합하지 않은 명령어입니다.";
-    private final String command;
+    private static final String INVALID_MOVE_DIRECTION = "다리 이동에 적합하지 않은 약어입니다.";
+    private final String abbreviation;
 
-    MovingCommand(String command) {
-        this.command = command;
+    MoveDirection(String abbreviation) {
+        this.abbreviation = abbreviation;
     }
 
-    public static MovingCommand from(String command) {
+    public static MoveDirection from(String abbreviation) {
         return Stream.of(values())
-                .filter(movingCommand -> movingCommand.command.equals(command))
+                .filter(moveDirection -> moveDirection.abbreviation.equals(abbreviation))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(INVALID_MOVING_COMMAND));
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_MOVE_DIRECTION));
     }
 
     public boolean isMovable(BridgeElement currentBridgeElement) {

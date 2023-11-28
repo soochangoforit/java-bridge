@@ -4,35 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class Bridge {
-    private static final int INITIAL_POSITION = 0;
-
     private final List<BridgeElement> bridgeElements;
-    private int currentPosition;
 
-    private Bridge(List<BridgeElement> bridgeElements, int currentPosition) {
+    private Bridge(List<BridgeElement> bridgeElements) {
         this.bridgeElements = new ArrayList<>(bridgeElements);
-        this.currentPosition = currentPosition;
     }
 
     public static Bridge from(List<BridgeElement> bridgeElements) {
-        return new Bridge(bridgeElements, INITIAL_POSITION);
+        return new Bridge(bridgeElements);
     }
 
-    public boolean isMovable(MovingCommand movingCommand) {
-        BridgeElement currentBridgeElement = bridgeElements.get(currentPosition);
-        boolean movable = movingCommand.isMovable(currentBridgeElement);
-        if (movable) {
-            ++currentPosition;
-            return true;
-        }
-        return false;
+    public boolean isMovable(MovePosition movePosition, MoveDirection moveDirection) {
+        BridgeElement currentBridgeElement = bridgeElements.get(movePosition.getValue());
+        return moveDirection.isMovable(currentBridgeElement);
     }
 
-    public void resetPosition() {
-        currentPosition = 0;
-    }
-
-    public boolean isFinished() {
-        return currentPosition == bridgeElements.size();
+    public int getSize() {
+        return bridgeElements.size();
     }
 }

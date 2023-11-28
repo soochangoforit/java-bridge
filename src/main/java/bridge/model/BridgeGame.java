@@ -34,13 +34,13 @@ public final class BridgeGame {
      * <p>
      * 이동을 위해 필요한 메서드의 반환 타입(return type), 인자(parameter)는 자유롭게 추가하거나 변경할 수 있다.
      */
-    public MovedResult move(MovingCommand movingCommand) {
-        boolean isMoved = bridge.isMovable(movingCommand);
-        if (bridge.isFinished()) {
+    public MovedResult move(Player player, MoveDirection moveDirection) {
+        boolean isMoved = player.move(moveDirection, bridge);
+        if (player.crossAllBridge(bridge)) {
             gameStatus = BridgeGameStatus.FINISHED;
         }
 
-        return MovedResult.of(movingCommand, isMoved);
+        return MovedResult.of(moveDirection, isMoved);
     }
 
     /**
@@ -49,7 +49,6 @@ public final class BridgeGame {
      * 재시작을 위해 필요한 메서드의 반환 타입(return type), 인자(parameter)는 자유롭게 추가하거나 변경할 수 있다.
      */
     public void retry() {
-        bridge.resetPosition();
     }
 
     public void endGame() {

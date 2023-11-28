@@ -1,5 +1,6 @@
-package bridge.view;
+package bridge.view.input;
 
+import bridge.view.print.Printer;
 import bridge.view.validator.BlankValidator;
 import bridge.view.validator.DigitsOnlyValidator;
 import bridge.view.validator.SingleCharacterValidator;
@@ -9,14 +10,19 @@ import camp.nextstep.edu.missionutils.Console;
  * 사용자로부터 입력을 받는 역할을 한다.
  */
 public class InputView {
+    private final Printer printer;
+
+    public InputView(Printer printer) {
+        this.printer = printer;
+    }
 
     /**
      * 다리의 길이를 입력받는다.
      */
     public int readBridgeSize() {
-        println("다리의 길이를 입력해주세요.");
+        printer.printLine("다리의 길이를 입력해주세요.");
         String rawBridgeSize = readLine();
-        printEmptyLine();
+        printer.printEmptyLine();
         validateBridgeSize(rawBridgeSize);
         return convertToInt(rawBridgeSize);
     }
@@ -27,11 +33,7 @@ public class InputView {
     }
 
     private String readLine() {
-        return Console.readLine();
-    }
-
-    private void println(String message) {
-        System.out.println(message);
+        return Console.readLine().trim();
     }
 
     private int convertToInt(String input) {
@@ -42,10 +44,6 @@ public class InputView {
         }
     }
 
-    private void printEmptyLine() {
-        println("");
-    }
-
     /**
      * 사용자가 이동할 칸을 입력받는다.
      */
@@ -54,6 +52,10 @@ public class InputView {
         String rawMovingCommand = readLine();
         validateMovingCommand(rawMovingCommand);
         return rawMovingCommand;
+    }
+
+    private void println(String message) {
+        System.out.println(message);
     }
 
     private void validateMovingCommand(String rawMovingCommand) {

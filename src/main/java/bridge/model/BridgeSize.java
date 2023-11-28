@@ -3,10 +3,10 @@ package bridge.model;
 import java.util.Objects;
 
 public final class BridgeSize {
+    private static final String INVALID_BRIDGE_SIZE = "다리의 길이는 %d 이상, %d 이하의 자연수만 가능합니다.";
     private static final int MIN_SIZE = 3;
     private static final int MAX_SIZE = 20;
-    private static final String INVALID_BRIDGE_SIZE = "다리의 길이는 %d 이상, %d 이하의 자연수만 가능합니다.";
-    
+
     private final int size;
 
     private BridgeSize(int size) {

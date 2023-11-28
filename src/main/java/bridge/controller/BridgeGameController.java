@@ -4,13 +4,13 @@ import java.util.function.Supplier;
 import bridge.BridgeMaker;
 import bridge.model.BridgeGame;
 import bridge.model.BridgeSize;
+import bridge.model.MoveDirection;
 import bridge.model.MovedHistory;
 import bridge.model.MovedResult;
-import bridge.model.MovingCommand;
 import bridge.model.Player;
 import bridge.model.RetryCommand;
-import bridge.view.InputView;
-import bridge.view.OutputView;
+import bridge.view.input.InputView;
+import bridge.view.output.OutputView;
 
 public class BridgeGameController {
     private final InputView inputView;
@@ -36,8 +36,8 @@ public class BridgeGameController {
 
     private void handleUnsuccessfulMove(Player player, MovedResult userMovedResult, BridgeGame bridgeGame) {
         if (userMovedResult.isNotMoved()) {
-            RetryCommand retryCommand = retryOnException(this::fetchRetryCommand);
-            handleOnReTry(retryCommand, player, bridgeGame);
+            RetryCommand retryCommand = fetch(this::fetchRetryCommand);
+            handleOnReTry(retryCommand, player);
             handleOnQuit(retryCommand, bridgeGame);
         }
     }
@@ -51,7 +51,7 @@ public class BridgeGameController {
     }
 
     private BridgeGame createBridgeGame() {
-        BridgeSize bridgeSize = retryOnException(this::fetchBridgeSize);
+        BridgeSize bridgeSize = fetch(this::readBridgeSize);
         return BridgeGame.create(bridgeMaker, bridgeSize);
     }
 
@@ -62,18 +62,16 @@ public class BridgeGameController {
     }
 
     private MovedResult crossBridge(Player player, BridgeGame bridgeGame) {
-        MovingCommand movingCommand = retryOnException(this::fetchMovingCommand);
-        MovedResult userMovedResult = bridgeGame.move(movingCommand);
+        MoveDirection moveDirection = fetch(this::readMoveDirection);
+        MovedResult userMovedResult = bridgeGame.move(player, moveDirection);
         player.markMovedHistory(userMovedResult);
         printMovedHistory(player.getMovedHistory());
         return userMovedResult;
     }
 
-    private void handleOnReTry(RetryCommand retryCommand, Player player, BridgeGame bridgeGame) {
+    private void handleOnReTry(RetryCommand retryCommand, Player player) {
         if (retryCommand.isRetry()) {
-            bridgeGame.retry();
-            player.increaseTryCount();
-            player.clearHistory();
+            player.resetAll();
         }
     }
 
@@ -86,22 +84,22 @@ public class BridgeGameController {
         return RetryCommand.from(rawRetryCommand);
     }
 
-    private MovingCommand fetchMovingCommand() {
-        String rawMovingCommand = inputView.readMoving();
-        return MovingCommand.from(rawMovingCommand);
+    private MoveDirection readMoveDirection() {
+        String rawMoveDirectionAbbreviation = inputView.readMoving();
+        return MoveDirection.from(rawMoveDirectionAbbreviation);
     }
 
-    private BridgeSize fetchBridgeSize() {
+    private BridgeSize readBridgeSize() {
         int bridgeSize = inputView.readBridgeSize();
         return BridgeSize.from(bridgeSize);
     }
 
-    private <T> T retryOnException(Supplier<T> supplier) {
+    private <T> T fetch(Supplier<T> supplier) {
         try {
             return supplier.get();
         } catch (IllegalArgumentException e) {
             outputView.printExceptionMessage(e.getMessage());
-            return retryOnException(supplier);
+            return fetch(supplier);
         }
     }
 }

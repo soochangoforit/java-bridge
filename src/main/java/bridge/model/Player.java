@@ -2,30 +2,43 @@ package bridge.model;
 
 public final class Player {
     private final MovedHistory movedHistory;
+    private MovePosition movePosition;
     private TryCount tryCount;
 
-    private Player(TryCount tryCount, MovedHistory movedHistory) {
-        this.tryCount = tryCount;
+    public Player(MovedHistory movedHistory, MovePosition movePosition, TryCount tryCount) {
         this.movedHistory = movedHistory;
+        this.movePosition = movePosition;
+        this.tryCount = tryCount;
     }
 
     public static Player initialize() {
-        TryCount tryCount = TryCount.firstTryCount();
         MovedHistory movedHistory = MovedHistory.initialize();
+        TryCount tryCount = TryCount.defaultTryCount();
+        MovePosition movePosition = MovePosition.defaultPosition();
 
-        return new Player(tryCount, movedHistory);
-    }
-
-    public void increaseTryCount() {
-        tryCount = tryCount.increase();
-    }
-
-    public void clearHistory() {
-        movedHistory.clearHistory();
+        return new Player(movedHistory, movePosition, tryCount);
     }
 
     public void markMovedHistory(MovedResult userMovedResult) {
         movedHistory.add(userMovedResult);
+    }
+
+    public boolean move(MoveDirection moveDirection, Bridge bridge) {
+        boolean isMovable = bridge.isMovable(movePosition, moveDirection);
+        if (isMovable) {
+            movePosition = movePosition.move();
+        }
+        return isMovable;
+    }
+
+    public boolean crossAllBridge(Bridge bridge) {
+        return movePosition.isLastPosition(bridge.getSize());
+    }
+
+    public void resetAll() {
+        movedHistory.clearHistory();
+        movePosition = MovePosition.defaultPosition();
+        tryCount = tryCount.increase();
     }
 
     public TryCount getTryCount() {

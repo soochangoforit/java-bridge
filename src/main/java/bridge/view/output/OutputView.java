@@ -1,12 +1,13 @@
-package bridge.view;
+package bridge.view.output;
 
-import static bridge.model.MovingCommand.DOWN_MOVING;
-import static bridge.model.MovingCommand.UP_MOVING;
+import static bridge.model.MoveDirection.DOWN_MOVING;
+import static bridge.model.MoveDirection.UP_MOVING;
 
 import java.util.ArrayList;
 import java.util.List;
 import bridge.model.MovedHistory;
 import bridge.model.MovedResult;
+import bridge.view.print.Printer;
 
 /**
  * 사용자에게 게임 진행 상황과 결과를 출력하는 역할을 한다.
@@ -14,13 +15,19 @@ import bridge.model.MovedResult;
 public class OutputView {
     private static final String EXCEPTION_FORMAT = "[ERROR] %s";
 
+    private final Printer printer;
+
+    public OutputView(Printer printer) {
+        this.printer = printer;
+    }
+
     public void printStartMessage() {
         println("다리 건너기 게임을 시작합니다.");
         printEmptyLine();
     }
 
     private void printEmptyLine() {
-        println("");
+        System.out.println();
     }
 
     private void println(String message) {
