@@ -44,6 +44,7 @@ public class BridgeGameController {
                 }
             }
         }
+        outputView.printResult(player.getMovingResults(), player.getTryCount());
 
     }
 

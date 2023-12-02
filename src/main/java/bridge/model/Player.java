@@ -42,4 +42,8 @@ public class Player {
     public List<MovingResult> getMovingResults() {
         return movingResults;
     }
+
+    public int getTryCount() {
+        return tryCount;
+    }
 }
