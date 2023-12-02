@@ -34,7 +34,7 @@ public class Player {
 
     public void retry() {
         ++tryCount;
-        currentPosition = 0;
+        currentPosition = DEFAULT_POSITION;
         movedHistory.clear();
     }
 
