@@ -67,7 +67,15 @@ public class InputView {
      * 사용자가 게임을 다시 시도할지 종료할지 여부를 입력받는다.
      */
     public String readGameCommand() {
-        return null;
+        println("게임을 다시 시도할지 여부를 입력해주세요. (재시도: R, 종료: Q)");
+        String rawGameCommand = readLine();
+        validateGameCommand(rawGameCommand);
+        return rawGameCommand;
+    }
+
+    private void validateGameCommand(String rawGameCommand) {
+        BlankValidator.validate(rawGameCommand);
+        EnglishOnlyValidator.validate(rawGameCommand);
     }
 
     private void print(String message) {

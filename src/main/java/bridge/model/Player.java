@@ -18,20 +18,25 @@ public class Player {
         return new Player(new ArrayList<>(), 0, 1);
     }
 
-    public boolean move(MovingDirection movingDirection, Bridge bridge) {
+    public MovingResult move(MovingDirection movingDirection, Bridge bridge) {
         BridgeElement bridgeElement = bridge.getElement(currentPosition);
         boolean isMoved = movingDirection.canMove(bridgeElement);
-
+        MovingResult movingResult = MovingResult.of(isMoved, movingDirection);
+        movingResults.add(movingResult);
         if (isMoved) {
-            MovingResult movingResult = MovingResult.of(isMoved, movingDirection);
-            movingResults.add(movingResult);
             ++currentPosition;
         }
-        return isMoved;
+        return movingResult;
     }
 
     public boolean isCrossedAll(Bridge bridge) {
         return bridge.isCrossedAll(currentPosition);
+    }
+
+    public void retry() {
+        ++tryCount;
+        currentPosition = 0;
+        movingResults.clear();
     }
 
     public List<MovingResult> getMovingResults() {

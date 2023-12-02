@@ -43,6 +43,7 @@ public class OutputView {
         String downBridge = String.join(" | ", downBridgeRecords);
 
         println(String.format("[ %s ]\n[ %s ]", upBridge, downBridge));
+        printEmptyLine();
     }
 
     private List<String> makeDownBridge(List<MovingResult> movingResults) {

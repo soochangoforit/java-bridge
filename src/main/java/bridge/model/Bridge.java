@@ -26,4 +26,5 @@ public class Bridge {
     public boolean isCrossedAll(int currentPosition) {
         return currentPosition == bridgeElements.size();
     }
+
 }

@@ -5,7 +5,9 @@ import bridge.BridgeMaker;
 import bridge.model.Bridge;
 import bridge.model.BridgeGame;
 import bridge.model.BridgeSize;
+import bridge.model.GameCommand;
 import bridge.model.MovingDirection;
+import bridge.model.MovingResult;
 import bridge.model.Player;
 import bridge.view.InputView;
 import bridge.view.OutputView;
@@ -26,13 +28,28 @@ public class BridgeGameController {
         BridgeSize bridgeSize = fetch(this::readBridgeSize);
         Bridge bridge = Bridge.create(bridgeMaker, bridgeSize);
         BridgeGame bridgeGame = BridgeGame.from(bridge);
-        MovingDirection movingDirection = fetch(this::readMovingDirection);
         Player player = Player.initialize();
         while (bridgeGame.isInProgress()) {
-            bridgeGame.move(player, movingDirection);
+            MovingDirection movingDirection = fetch(this::readMovingDirection);
+            MovingResult movingResult = bridgeGame.move(player, movingDirection);
             outputView.printMap(player.getMovingResults());
+            if (movingResult.isNotMoved()) {
+                GameCommand gameCommand = fetch(this::readGameCommand);
+                if (gameCommand.isQuit()) {
+                    bridgeGame.endGame();
+                }
+                if (gameCommand.isRetry()) {
+                    bridgeGame.retry();
+                    player.retry();
+                }
+            }
         }
 
+    }
+
+    private GameCommand readGameCommand() {
+        String rawGameCommand = inputView.readGameCommand();
+        return GameCommand.from(rawGameCommand);
     }
 
     private MovingDirection readMovingDirection() {
