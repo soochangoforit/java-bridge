@@ -1,9 +1,27 @@
-package bridge;
+package bridge.view;
 
 /**
  * 사용자에게 게임 진행 상황과 결과를 출력하는 역할을 한다.
  */
 public class OutputView {
+    private static final String EXCEPTION_FORMAT = "[ERROR] %s";
+
+    public void printExceptionMessage(String message) {
+        println(String.format(EXCEPTION_FORMAT, message));
+    }
+
+    private void println(String message) {
+        System.out.println(message);
+    }
+
+    public void printStartMessage() {
+        println("다리 건너기 게임을 시작합니다.");
+        printEmptyLine();
+    }
+
+    private void printEmptyLine() {
+        System.out.println();
+    }
 
     /**
      * 현재까지 이동한 다리의 상태를 정해진 형식에 맞춰 출력한다.
