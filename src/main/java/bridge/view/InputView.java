@@ -2,6 +2,8 @@ package bridge.view;
 
 import java.util.List;
 import java.util.stream.Stream;
+import bridge.view.validator.BlankValidator;
+import bridge.view.validator.DigitsOnlyValidator;
 import camp.nextstep.edu.missionutils.Console;
 
 /**
@@ -13,7 +15,31 @@ public class InputView {
      * 다리의 길이를 입력받는다.
      */
     public int readBridgeSize() {
-        return 0;
+        println("다리의 길이를 입력해주세요.");
+        String rawBridgeSize = readLine();
+        validateBridgeSize(rawBridgeSize);
+        return convertToInt(rawBridgeSize);
+    }
+
+    private void validateBridgeSize(String rawBridgeSize) {
+        BlankValidator.validate(rawBridgeSize);
+        DigitsOnlyValidator.validate(rawBridgeSize);
+    }
+
+    private String readLine() {
+        return Console.readLine().trim();
+    }
+
+    private void println(String message) {
+        System.out.println(message);
+    }
+
+    private int convertToInt(String input) {
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("숫자로 변환할 수 없는 문자입니다.");
+        }
     }
 
     /**
@@ -30,16 +56,8 @@ public class InputView {
         return null;
     }
 
-    private String readLine() {
-        return Console.readLine().trim();
-    }
-
     private void print(String message) {
         System.out.print(message);
-    }
-
-    private void println(String message) {
-        System.out.println(message);
     }
 
     private void printEmptyLine() {
@@ -54,13 +72,5 @@ public class InputView {
         return Stream.of(input.split(delimiter))
                 .map(Integer::parseInt)
                 .toList();
-    }
-
-    private int convertToInt(String input) {
-        try {
-            return Integer.parseInt(input);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("숫자로 변환할 수 없는 문자입니다.");
-        }
     }
 }
