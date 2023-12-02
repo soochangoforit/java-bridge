@@ -25,27 +25,47 @@ public class BridgeGameController {
 
     public void run() {
         outputView.printStartMessage();
-        BridgeSize bridgeSize = fetch(this::readBridgeSize);
-        Bridge bridge = Bridge.create(bridgeMaker, bridgeSize);
+        Bridge bridge = createBridge();
         BridgeGame bridgeGame = BridgeGame.from(bridge);
         Player player = Player.initialize();
         while (bridgeGame.isInProgress()) {
-            MovingDirection movingDirection = fetch(this::readMovingDirection);
-            MovingResult movingResult = bridgeGame.move(player, movingDirection);
-            outputView.printMap(player.getMovingResults());
-            if (movingResult.isNotMoved()) {
-                GameCommand gameCommand = fetch(this::readGameCommand);
-                if (gameCommand.isQuit()) {
-                    bridgeGame.endGame();
-                }
-                if (gameCommand.isRetry()) {
-                    bridgeGame.retry();
-                    player.retry();
-                }
-            }
+            MovingResult movingResult = play(bridgeGame, player);
+            handleNotMoved(movingResult, bridgeGame, player);
         }
-        outputView.printResult(player.getMovingResults(), player.getTryCount());
+        outputView.printResult(player.getMovedHistory(), player.getTryCount());
+    }
 
+    private MovingResult play(BridgeGame bridgeGame, Player player) {
+        MovingDirection movingDirection = fetch(this::readMovingDirection);
+        MovingResult movingResult = bridgeGame.move(player, movingDirection);
+        outputView.printMap(player.getMovedHistory().getMovingResults());
+        return movingResult;
+    }
+
+    private void handleQuit(GameCommand gameCommand, BridgeGame bridgeGame) {
+        if (gameCommand.isQuit()) {
+            bridgeGame.endGame();
+        }
+    }
+
+    private void handleRetry(GameCommand gameCommand, BridgeGame bridgeGame, Player player) {
+        if (gameCommand.isRetry()) {
+            bridgeGame.retry();
+            player.retry();
+        }
+    }
+
+    private void handleNotMoved(MovingResult movingResult, BridgeGame bridgeGame, Player player) {
+        if (movingResult.isNotMoved()) {
+            GameCommand gameCommand = fetch(this::readGameCommand);
+            handleQuit(gameCommand, bridgeGame);
+            handleRetry(gameCommand, bridgeGame, player);
+        }
+    }
+
+    private Bridge createBridge() {
+        BridgeSize bridgeSize = fetch(this::readBridgeSize);
+        return Bridge.create(bridgeMaker, bridgeSize);
     }
 
     private GameCommand readGameCommand() {

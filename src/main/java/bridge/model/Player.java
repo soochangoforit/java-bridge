@@ -1,28 +1,28 @@
 package bridge.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Player {
-    private final List<MovingResult> movingResults;
+    private static final int DEFAULT_POSITION = 0;
+    private static final int DEFAULT_TRY_COUNT = 1;
+
+    private final MovedHistory movedHistory;
     private int currentPosition;
     private int tryCount;
 
-    public Player(List<MovingResult> movingResults, int currentPosition, int tryCount) {
-        this.movingResults = movingResults;
+    public Player(MovedHistory movedHistory, int currentPosition, int tryCount) {
+        this.movedHistory = movedHistory;
         this.currentPosition = currentPosition;
         this.tryCount = tryCount;
     }
 
     public static Player initialize() {
-        return new Player(new ArrayList<>(), 0, 1);
+        return new Player(MovedHistory.initialize(), DEFAULT_POSITION, DEFAULT_TRY_COUNT);
     }
 
     public MovingResult move(MovingDirection movingDirection, Bridge bridge) {
         BridgeElement bridgeElement = bridge.getElement(currentPosition);
         boolean isMoved = movingDirection.canMove(bridgeElement);
         MovingResult movingResult = MovingResult.of(isMoved, movingDirection);
-        movingResults.add(movingResult);
+        movedHistory.add(movingResult);
         if (isMoved) {
             ++currentPosition;
         }
@@ -36,11 +36,11 @@ public class Player {
     public void retry() {
         ++tryCount;
         currentPosition = 0;
-        movingResults.clear();
+        movedHistory.clear();
     }
 
-    public List<MovingResult> getMovingResults() {
-        return movingResults;
+    public MovedHistory getMovedHistory() {
+        return movedHistory;
     }
 
     public int getTryCount() {

@@ -2,6 +2,7 @@ package bridge.view;
 
 import java.util.ArrayList;
 import java.util.List;
+import bridge.model.MovedHistory;
 import bridge.model.MovingResult;
 
 /**
@@ -38,18 +39,15 @@ public class OutputView {
      * <p>
      * 출력을 위해 필요한 메서드의 인자(parameter)는 자유롭게 추가하거나 변경할 수 있다.
      */
-    public void printResult(List<MovingResult> movingResults, int tryCount) {
+    public void printResult(MovedHistory movedHistory, int tryCount) {
         println("최종 게임 결과");
-        printMap(movingResults);
-        String formattedGameSuccessMessage = String.format("게임 성공 여부: %s", checkGameWinning(movingResults));
-        println(formattedGameSuccessMessage);
-        String formattedTryCountMessage = String.format("총 시도한 횟수: %d", tryCount);
-        println(formattedTryCountMessage);
+        printMap(movedHistory.getMovingResults());
+        println(String.format("게임 성공 여부: %s", checkGameWinning(movedHistory)));
+        println(String.format("총 시도한 횟수: %d", tryCount));
     }
 
-    private String checkGameWinning(List<MovingResult> movingResults) {
-        boolean isMovedAllBridge = movingResults.stream()
-                .allMatch(movingResult -> movingResult.isMoved());
+    private String checkGameWinning(MovedHistory movedHistory) {
+        boolean isMovedAllBridge = movedHistory.isMovedAll();
         if (isMovedAllBridge) {
             return "성공";
         }
@@ -70,27 +68,35 @@ public class OutputView {
     private List<String> makeDownBridge(List<MovingResult> movingResults) {
         List<String> downBridgeRecords = new ArrayList<>();
         for (MovingResult movingResult : movingResults) {
-            if (movingResult.isMovedDown()) {
-                mark(movingResult, downBridgeRecords);
-            }
-            if (movingResult.isMovedUp()) {
-                markEmptySpace(downBridgeRecords);
-            }
+            markDownBridge(movingResult, downBridgeRecords);
         }
         return downBridgeRecords;
+    }
+
+    private void markDownBridge(MovingResult movingResult, List<String> downBridgeRecords) {
+        if (movingResult.isMovedDown()) {
+            mark(movingResult, downBridgeRecords);
+        }
+        if (movingResult.isMovedUp()) {
+            markEmptySpace(downBridgeRecords);
+        }
     }
 
     private List<String> makeUpBridge(List<MovingResult> movingResults) {
         List<String> upBridgeRecords = new ArrayList<>();
         for (MovingResult movingResult : movingResults) {
-            if (movingResult.isMovedUp()) {
-                mark(movingResult, upBridgeRecords);
-            }
-            if (movingResult.isMovedDown()) {
-                markEmptySpace(upBridgeRecords);
-            }
+            markUpBridge(movingResult, upBridgeRecords);
         }
         return upBridgeRecords;
+    }
+
+    private void markUpBridge(MovingResult movingResult, List<String> upBridgeRecords) {
+        if (movingResult.isMovedUp()) {
+            mark(movingResult, upBridgeRecords);
+        }
+        if (movingResult.isMovedDown()) {
+            markEmptySpace(upBridgeRecords);
+        }
     }
 
     private void markEmptySpace(List<String> bridge) {

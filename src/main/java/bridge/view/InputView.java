@@ -1,7 +1,5 @@
 package bridge.view;
 
-import java.util.List;
-import java.util.stream.Stream;
 import bridge.view.validator.BlankValidator;
 import bridge.view.validator.DigitsOnlyValidator;
 import bridge.view.validator.EnglishOnlyValidator;
@@ -78,17 +76,4 @@ public class InputView {
         EnglishOnlyValidator.validate(rawGameCommand);
     }
 
-    private void print(String message) {
-        System.out.print(message);
-    }
-
-    private List<String> split(String format, String input) {
-        return List.of(input.split(format));
-    }
-
-    private List<Integer> splitToInt(String delimiter, String input) {
-        return Stream.of(input.split(delimiter))
-                .map(Integer::parseInt)
-                .toList();
-    }
 }
