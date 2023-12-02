@@ -28,6 +28,10 @@ public enum BridgeElement {
                 .orElseThrow(() -> new IllegalArgumentException("다리의 형태는 U 또는 D 문자로만 생성이 가능합니다."));
     }
 
+    public boolean isSame(String abbreviation) {
+        return this.abbreviation.equals(abbreviation);
+    }
+
     public String getAbbreviation() {
         return abbreviation;
     }

@@ -18,4 +18,16 @@ public enum MovingDirection {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("이동 방향은 U 또는 D 문자로만 생성이 가능합니다."));
     }
+
+    public boolean canMove(BridgeElement bridgeElement) {
+        return bridgeElement.isSame(abbreviation);
+    }
+
+    public boolean isMovedDown() {
+        return this == MOVE_DOWN;
+    }
+
+    public boolean isMovedUp() {
+        return this == MOVE_UP;
+    }
 }

@@ -6,6 +6,7 @@ import bridge.model.Bridge;
 import bridge.model.BridgeGame;
 import bridge.model.BridgeSize;
 import bridge.model.MovingDirection;
+import bridge.model.Player;
 import bridge.view.InputView;
 import bridge.view.OutputView;
 
@@ -26,6 +27,11 @@ public class BridgeGameController {
         Bridge bridge = Bridge.create(bridgeMaker, bridgeSize);
         BridgeGame bridgeGame = BridgeGame.from(bridge);
         MovingDirection movingDirection = fetch(this::readMovingDirection);
+        Player player = Player.initialize();
+        while (bridgeGame.isInProgress()) {
+            bridgeGame.move(player, movingDirection);
+            outputView.printMap(player.getMovingResults());
+        }
 
     }
 

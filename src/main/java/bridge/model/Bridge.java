@@ -18,4 +18,12 @@ public class Bridge {
 
         return new Bridge(bridgeElements);
     }
+
+    public BridgeElement getElement(int currentPosition) {
+        return bridgeElements.get(currentPosition);
+    }
+
+    public boolean isCrossedAll(int currentPosition) {
+        return currentPosition == bridgeElements.size();
+    }
 }
