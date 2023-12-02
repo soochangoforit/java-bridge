@@ -1,6 +1,8 @@
 package bridge.controller;
 
 import java.util.function.Supplier;
+import bridge.BridgeMaker;
+import bridge.model.Bridge;
 import bridge.model.BridgeSize;
 import bridge.view.InputView;
 import bridge.view.OutputView;
@@ -8,15 +10,18 @@ import bridge.view.OutputView;
 public class BridgeGameController {
     private final InputView inputView;
     private final OutputView outputView;
+    private final BridgeMaker bridgeMaker;
 
-    public BridgeGameController(InputView inputView, OutputView outputView) {
+    public BridgeGameController(InputView inputView, OutputView outputView, BridgeMaker bridgeMaker) {
         this.inputView = inputView;
         this.outputView = outputView;
+        this.bridgeMaker = bridgeMaker;
     }
 
     public void run() {
         outputView.printStartMessage();
         BridgeSize bridgeSize = fetch(this::readBridgeSize);
+        Bridge bridge = Bridge.create(bridgeMaker, bridgeSize);
 
     }
 

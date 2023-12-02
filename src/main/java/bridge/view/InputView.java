@@ -17,6 +17,7 @@ public class InputView {
     public int readBridgeSize() {
         println("다리의 길이를 입력해주세요.");
         String rawBridgeSize = readLine();
+        printEmptyLine();
         validateBridgeSize(rawBridgeSize);
         return convertToInt(rawBridgeSize);
     }
@@ -42,6 +43,10 @@ public class InputView {
         }
     }
 
+    private void printEmptyLine() {
+        System.out.println();
+    }
+
     /**
      * 사용자가 이동할 칸을 입력받는다.
      */
@@ -58,10 +63,6 @@ public class InputView {
 
     private void print(String message) {
         System.out.print(message);
-    }
-
-    private void printEmptyLine() {
-        System.out.println();
     }
 
     private List<String> split(String format, String input) {
