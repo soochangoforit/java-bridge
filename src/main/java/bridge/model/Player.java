@@ -19,8 +19,7 @@ public class Player {
     }
 
     public MovingResult move(MovingDirection movingDirection, Bridge bridge) {
-        BridgeElement bridgeElement = bridge.getElement(currentPosition);
-        boolean isMoved = movingDirection.canMove(bridgeElement);
+        boolean isMoved = bridge.isCrossed(currentPosition, movingDirection);
         MovingResult movingResult = MovingResult.of(isMoved, movingDirection);
         movedHistory.add(movingResult);
         if (isMoved) {
