@@ -3,7 +3,9 @@ package bridge.controller;
 import java.util.function.Supplier;
 import bridge.BridgeMaker;
 import bridge.model.Bridge;
+import bridge.model.BridgeGame;
 import bridge.model.BridgeSize;
+import bridge.model.MovingDirection;
 import bridge.view.InputView;
 import bridge.view.OutputView;
 
@@ -22,7 +24,14 @@ public class BridgeGameController {
         outputView.printStartMessage();
         BridgeSize bridgeSize = fetch(this::readBridgeSize);
         Bridge bridge = Bridge.create(bridgeMaker, bridgeSize);
+        BridgeGame bridgeGame = BridgeGame.from(bridge);
+        MovingDirection movingDirection = fetch(this::readMovingDirection);
 
+    }
+
+    private MovingDirection readMovingDirection() {
+        String rawMovingDirection = inputView.readMoving();
+        return MovingDirection.from(rawMovingDirection);
     }
 
     private BridgeSize readBridgeSize() {

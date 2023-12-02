@@ -4,6 +4,17 @@ package bridge.model;
  * 다리 건너기 게임을 관리하는 클래스
  */
 public class BridgeGame {
+    private final Bridge bridge;
+    private boolean inProgress;
+
+    private BridgeGame(Bridge bridge, boolean inProgress) {
+        this.bridge = bridge;
+        this.inProgress = inProgress;
+    }
+
+    public static BridgeGame from(Bridge bridge) {
+        return new BridgeGame(bridge, true);
+    }
 
     /**
      * 사용자가 칸을 이동할 때 사용하는 메서드
